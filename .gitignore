@@ -1,0 +1,6 @@
+*.yaml
+response*.json
+*.env
+images/*.png
+*.pyc
+*.md
