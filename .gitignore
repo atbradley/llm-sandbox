@@ -1,6 +1,8 @@
 *.yaml
-response*.json
 *.env
 images/*.png
+output/
 *.pyc
 *.md
+*.json
+*.jpg

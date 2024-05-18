@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+OUTPUT_FOLDER = os.getenv("OUTPUT_FOLDER")
 MODEL = os.getenv("MODEL", "gpt-4") 
 openai.api_key = os.getenv("API_KEY")
 
@@ -30,23 +31,18 @@ while True:
             continue
     
     print("sending...")
-    response = openai.ChatCompletion.create(model=MODEL, 
-                    messages=[{"role": "user", "content": prompt}])
+    response = openai.chat.completions.create(model=MODEL, 
+                    messages=[{"role": "user", "content": prompt}]).to_dict()
     
-    fname = f"response{time.time_ns()}.json"
     transdata = {
         "request": {
             "prompt": prompt,
         },
         "response": response,
     }
-    jsondata = json.dumps(transdata, indent=4)
-    with open(fname, "w") as f:
-        f.write(jsondata)
 
     fname = f"response{time.time_ns()}.yaml"
-    yamldata = json.loads(jsondata)
-    yaml.dump(yamldata, open(fname, "w"), indent=4, Dumper=yaml.SafeDumper)
+    yaml.dump(transdata, open(os.path.join(OUTPUT_FOLDER, fname), "w"), indent=4, Dumper=yaml.SafeDumper)
 
     print()
     #print(response.keys())
