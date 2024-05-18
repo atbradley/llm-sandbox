@@ -21,25 +21,29 @@ while True:
         "query": query,
         "cache": False,
     }
-    headers = {'Authorization': f'Bot {API_TOKEN}'}
+    headers = {"Authorization": f"Bot {API_TOKEN}"}
 
     response = requests.post(BASE_URL, headers=headers, json=data)
-    
-    if response.status_code!= 200:
-        print("EPIC FAIL!", response.status_code, response.reason)    
+
+    if response.status_code != 200:
+        print("EPIC FAIL!", response.status_code, response.reason)
         break
 
     rspdata = response.json()
 
-    #print(rspdata)
-    #print("Query: "+ query)
-    print("API Balance: $"+str(rspdata['meta']['api_balance']))
+    # print(rspdata)
+    # print("Query: "+ query)
+    print("API Balance: $" + str(rspdata["meta"]["api_balance"]))
     print()
-    print(rspdata['data']['output'])
-    print("Reference count:", len(rspdata['data'].get('references', [])))
+    print(rspdata["data"]["output"])
+    print("Reference count:", len(rspdata["data"].get("references", [])))
 
-    
     filename = f"query{time.time_ns()}.yaml"
     jsondata = json.dumps(rspdata, indent=4)
     yamldata = json.loads(jsondata)
-    yaml.dump(yamldata, open(os.path.join(OUTPUT_FOLDER, filename), "w"), indent=4, Dumper=yaml.SafeDumper)
+    yaml.dump(
+        yamldata,
+        open(os.path.join(OUTPUT_FOLDER, filename), "w"),
+        indent=4,
+        Dumper=yaml.SafeDumper,
+    )

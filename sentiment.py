@@ -11,7 +11,7 @@ load_dotenv()
 
 OUTPUT_FOLDER = os.getenv("OUTPUT_FOLDER")
 
-MODEL = os.getenv("MODEL", "gpt-4") 
+MODEL = os.getenv("MODEL", "gpt-4")
 openai.api_key = os.getenv("API_KEY")
 
 sys_msg = """
@@ -21,30 +21,33 @@ sys_msg = """
 
 while True:
     messages = [
-            {"role": "system", "content": sys_msg.strip()},
+        {"role": "system", "content": sys_msg.strip()},
     ]
     filename = f"sentiment{time.time_ns()}.yaml"
     print()
-    prompt = input("Enter your text or 'q' to quit: ")    
-    
+    prompt = input("Enter your text or 'q' to quit: ")
+
     if prompt == "q":
         break
 
     messages.append({"role": "user", "content": prompt})
     print("Sending...")
 
-    response=openai.chat.completions.create(
-        model=MODEL,
-        messages=messages,
-        n=1  # We can ask for more possible responses.
+    response = openai.chat.completions.create(
+        model=MODEL, messages=messages, n=1  # We can ask for more possible responses.
     ).to_dict()
 
-    print("Response:", response['choices'][0]['message']['content'])
-    messages.append(response['choices'][0]['message'])
-    print("Tokens: ", response['usage']['total_tokens'])
+    print("Response:", response["choices"][0]["message"]["content"])
+    messages.append(response["choices"][0]["message"])
+    print("Tokens: ", response["usage"]["total_tokens"])
 
     jsondata = json.dumps(messages, indent=4)
     yamldata = json.loads(jsondata)
-    yaml.dump(yamldata, open(os.path.join(OUTPUT_FOLDER, filename), "w"), indent=4, Dumper=yaml.SafeDumper)
+    yaml.dump(
+        yamldata,
+        open(os.path.join(OUTPUT_FOLDER, filename), "w"),
+        indent=4,
+        Dumper=yaml.SafeDumper,
+    )
 
-#print(messages)
+# print(messages)

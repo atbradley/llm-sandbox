@@ -11,10 +11,11 @@ load_dotenv()
 
 openai.api_key = os.getenv("API_KEY")
 
-def get_image_from_prompt(prompt, size:int=1024) -> str:
+
+def get_image_from_prompt(prompt, size: int = 1024) -> str:
     """
     Gets an image from DALL-E based on the prompt, and saves it to a file with
-    the prompt saved in the Image Description exif tag. Returns the filename. 
+    the prompt saved in the Image Description exif tag. Returns the filename.
     """
     sz = str(size) + "x" + str(size)
 
@@ -24,7 +25,7 @@ def get_image_from_prompt(prompt, size:int=1024) -> str:
         size=sz,
     )
 
-    imgrs = requests.get(response['data'][0]['url'])
+    imgrs = requests.get(response["data"][0]["url"])
 
     if imgrs.status_code != 200:
         raise Exception(f"Failed to get image from prompt: {prompt}")
@@ -33,7 +34,7 @@ def get_image_from_prompt(prompt, size:int=1024) -> str:
 
     with open("image.png", "wb") as f:
         f.write(imgdata)
-    
+
     imgio = BytesIO(imgdata)
     img = Image.open(imgio)
     exif = img.getexif()
@@ -43,6 +44,7 @@ def get_image_from_prompt(prompt, size:int=1024) -> str:
     img.save(f"images/{fname}", exif=exif)
 
     return fname
+
 
 if __name__ == "__main__":
     prompt = input("Prompt? ")

@@ -1,11 +1,14 @@
 import os
+import time
 
 from dotenv import load_dotenv
 import requests
+import yaml
 
 load_dotenv()
 BASE_URL = os.getenv("SUMMARIZER_URL")
 API_TOKEN = os.getenv("API_TOKEN")
+OUTPUT_FOLDER = os.getenv("OUTPUT_FOLDER")
 engine = os.getenv("DEFAULT_SUMMARIZER")
 summary_type = os.getenv("SUMMARY_TYPE")
 # print(BASE_URL, API_TOKEN, engine, summary_type)
@@ -77,4 +80,12 @@ while True:
         "Token count:",
         rspdata["data"]["tokens"],
         "API Balance: $" + str(rspdata["meta"]["api_balance"]),
+    )
+
+    fname = f"summary{time.time_ns()}.yaml"
+    yaml.dump(
+        rspdata,
+        open(os.path.join(OUTPUT_FOLDER, fname), "w"),
+        indent=4,
+        Dumper=yaml.SafeDumper,
     )
