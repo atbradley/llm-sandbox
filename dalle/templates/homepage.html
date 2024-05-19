@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Webpage</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .scrollable-div {
+            flex: 1;
+            overflow: auto;
+            padding: 20px;
+        }
+        .text-box {
+            border-top: 1px solid #ccc;
+            padding: 1rem 3rem;
+        }
+        .text-box input {
+            width: 100%
+        }
+
+        .prompt {
+            font-weight: bold;
+            padding: .5rem;
+            background-color: aqua;
+            border-radius: 10px;
+            margin-bottom: .2rem;
+        }
+
+        .response {
+            padding: .5rem;
+            background-color: coral;
+            border-radius: 10px;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="scrollable-div"></div>
+        <div class="text-box">
+            <input type="text" placeholder="Enter a prompt..." autofocus>
+        </div>
+    </div>
+
+    <script>
+        // Get the input element
+        // Get the input element with the css selector '.text-box input'
+        const inputElement = document.querySelector('.text-box input');
+        const history = document.querySelector('.scrollable-div');
+
+        // Add an event listener for keydown (when any key is pressed)
+        inputElement.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                // Create a new paragraph element in `history` with the input value as its text content
+                history.innerHTML += `<p class="prompt">${inputElement.value}</p>`;
+
+                // POST the input value to /prompt
+                fetch('/prompt', {
+                    method: 'POST',
+                    body: inputElement.value
+                }).then(response => {
+                    // Clear the input element
+                    inputElement.value = '';
+                    
+                    return response.text();
+                }).then(img => {
+                    console.log(img);
+                    history.innerHTML += `
+                        <p class="response"><img src="${img}"/></p>`;
+                    // Scroll history to the bottom.
+                    window.addEventListener('load', function() {
+                        history.scrollTop = history.scrollHeight;
+                    });
+                });
+            }
+        });
+
+        fetch('/history.json')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(item => {
+                    history.innerHTML += `<p class="prompt">${item.prompt}</p>`;
+                    history.innerHTML += `<p class="response"><img src="/output/img/${item.filename}"/></p>`;
+                });
+                // Scroll history to the bottom after images load.
+                window.addEventListener('load', function() {
+                    history.scrollTop = history.scrollHeight;
+                });
+            });
+    </script>
+</body>
+</html>

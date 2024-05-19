@@ -19,11 +19,12 @@ def get_image_from_prompt(prompt, size: int = 1024) -> str:
     """
     sz = str(size) + "x" + str(size)
 
-    response = openai.Image.create(
+    response = openai.images.generate(
+        model="dall-e-3",
         prompt=prompt,
         n=1,
         size=sz,
-    )
+    ).to_dict()
 
     imgrs = requests.get(response["data"][0]["url"])
 
@@ -32,16 +33,13 @@ def get_image_from_prompt(prompt, size: int = 1024) -> str:
 
     imgdata = imgrs.content
 
-    with open("image.png", "wb") as f:
-        f.write(imgdata)
-
     imgio = BytesIO(imgdata)
     img = Image.open(imgio)
     exif = img.getexif()
     exif[ExifTags.Base.ImageDescription.value] = f'Prompt: "{prompt}"'
 
     fname = f"dalle-{time.time_ns()}.png"
-    img.save(f"images/{fname}", exif=exif)
+    img.save(f"../output/images/{fname}", exif=exif)
 
     return fname
 
