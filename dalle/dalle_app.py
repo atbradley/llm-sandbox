@@ -20,7 +20,6 @@ async def prompt(request):
     # Return the body of the request as text. Remember to convert it from Bytes to str.
     prompt = request.body.decode()
     image = get_image_from_prompt(prompt)
-    print("Image filename:",image)
     return text("/output/img/"+image)
 
 @app.get("history.json")
@@ -29,7 +28,6 @@ async def history(request):
     # Get the 10 most recent images in the image output folder
     image_folder = "../output/images"
     images = sorted(Path(image_folder).glob("*.png"), key=lambda f: os.path.getmtime(str(f)))[-10:]
-    print(len(images))
 
     outp = []
     for image in images:
