@@ -2,7 +2,7 @@ import os
 import time
 
 from dotenv import load_dotenv
-import requests
+import httpx
 import yaml
 
 load_dotenv()
@@ -62,7 +62,7 @@ while True:
     }
     headers = {"Authorization": f"Bot {API_TOKEN}"}
 
-    response = requests.post(BASE_URL, headers=headers, json=data)
+    response = httpx.post(BASE_URL, headers=headers, json=data)
 
     if response.status_code != 200:
         print("EPIC FAIL!", response.status_code, response.reason)
