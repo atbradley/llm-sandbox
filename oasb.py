@@ -1,15 +1,16 @@
-import os
-
+import glob
 import json
-import yaml
+import os
 import time
 
-import openai
 from dotenv import load_dotenv
+import openai
+import yaml
 
 load_dotenv()
 
 OUTPUT_FOLDER = os.getenv("OUTPUT_FOLDER")
+PROMPT_FOLDER = os.getenv("PROMPT_FOLDER")
 MODEL = os.getenv("MODEL", "gpt-4")
 openai.api_key = os.getenv("API_KEY")
 
@@ -22,9 +23,18 @@ while True:
         break
 
     if prompt == "f":
-        # TODO: Offer to default to the newest .md file.
+        # Get the name of the newest file in PROMPT_FOLDER
+        newest_file = max(glob.glob(os.path.join(PROMPT_FOLDER, "*.md")), key=os.path.getctime)
+
+        if newest_file:
+            filename = input(f"Filename (default '{newest_file}'): ")
+            filename = os.path.join(PROMPT_FOLDER, filename) if filename else newest_file
+        else:
+            filename = input("Filename: ")
+            filename = os.path.join(PROMPT_FOLDER, filename)
+
         try:
-            with open(input("Filename: "), "r") as f:
+            with open(filename, "r") as f:
                 prompt = f.read()
         except FileNotFoundError:
             print("File not found.")
