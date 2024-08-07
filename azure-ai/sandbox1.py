@@ -28,22 +28,6 @@ messages = [
 
 payload = {
     "messages": messages,
-    "tools": [
-        {
-            "type": "function",
-            "function": {
-                "description": "Search our technical documentation database using a full-text search query.",
-                "name": "search_documentation",
-                "parameters": {
-                    "query": {
-                        "description": "The unique identifier for a product",
-                        "type": "string"
-                    }
-                }
-            },
-            "tool_choice": {"type": "function", "function": {"name": "search_documentation"}},
-        }
-    ]
 }
 
 while True:
