@@ -1,0 +1,23 @@
+#messages-div {
+    overflow: auto;
+}
+
+#messages-div div {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#messages-div div p {
+    margin: 0;
+    padding: 0;
+}
+
+.server-message {
+    background-color: #baffba;
+}
+
+.user-message {
+    background-color: #bae2ff;
+}
