@@ -9,6 +9,11 @@
     border-radius: 5px;
 }
 
+
+#messages-div div:first-child {
+    margin-top: 0;
+}
+
 #messages-div div p {
     margin: 0;
     padding: 0;

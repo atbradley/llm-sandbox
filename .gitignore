@@ -6,3 +6,4 @@ output/
 *.md
 *.json
 *.jpg
+.aider*

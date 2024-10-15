@@ -2,7 +2,7 @@ import openai
 from sanic import Sanic
 from sanic.response import json
 
-from settings import *
+from settings import api_key, base_url
 
 app = Sanic("BasicSanicApp")
 

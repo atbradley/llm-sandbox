@@ -23,7 +23,7 @@ while True:
     }
     headers = {"Authorization": f"Bot {API_TOKEN}"}
 
-    response = httpx.post(BASE_URL, headers=headers, json=data)
+    response = httpx.post(BASE_URL, headers=headers, json=data, timeout=30)
 
     if response.status_code != 200:
         print("EPIC FAIL!", response.status_code, response.reason)

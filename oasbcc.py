@@ -9,8 +9,16 @@ from dotenv import load_dotenv
 load_dotenv()
 
 OUTPUT_FOLDER = os.getenv("OUTPUT_FOLDER")
-MODEL = os.getenv("MODEL", "gpt-4")
+MODEL = os.getenv("MODEL", "gpt-4o-latest")
+
+
 openai.api_key = os.getenv("API_KEY")
+URL_BASE = os.getenv("URL_BASE")
+
+client = openai.OpenAI(
+    api_key=os.getenv("API_KEY"),
+    base_url=URL_BASE,
+)
 
 sys_msg = input("Enter the system message: ")
 messages = [
@@ -29,7 +37,7 @@ while True:
     messages.append({"role": "user", "content": prompt})
     print("Sending...")
 
-    response = openai.chat.completions.create(
+    response = client.chat.completions.create(
         model=MODEL, messages=messages, n=1  # We can ask for more possible responses.
     )
 
